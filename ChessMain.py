@@ -13,7 +13,8 @@ IMAGES = {}
 def loadImages():
     pieces = ['wP', 'wR', 'wN', 'wB', 'wK', 'bQ', 'bP', 'bR', 'bN', 'bB', 'bK', 'bQ']
     for piece in pieces:
-        IMAGES[piece] = p.transform.scale(p.image.load("/images/" + piece + '.png'), (SQ_SIZE, SQ_SIZE))
+        IMAGES[piece] = p.transform.scale(p.image.load("images/" + piece + '.png'), (SQ_SIZE, SQ_SIZE))
+        # this accesses the directory with images and maps an image to a piece
 
 # main driver for code: will handle input and updating the graphics
 def main():
