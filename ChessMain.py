@@ -1,8 +1,4 @@
 # Main driver file. Will be responsible for handling user inpput and displaying current GameState object
-#
-#
-#
-#
 
 import pygame as p
 import ChessEngine
@@ -46,7 +42,7 @@ def drawGameState(screen, gs):
 
 # draw the squares on the board
 def drawBoard(screen):
-    colors = [p.Color("white"), p.Color("gray")] # here's a placeholder comment
+    colors = [p.Color("white"), p.Color("gray")]
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             color = colors[((r+c)%2)]
@@ -55,16 +51,13 @@ def drawBoard(screen):
 
 # draw the pieces on the board using the current GameState.board
 def drawPieces(screen, board):
-    for r in range(DIMENSION): # temp comment
+    for r in range(DIMENSION):
         for c in range(DIMENSION):
             piece = board[r][c]
             if piece != "--":
-                screen.blit(IMAGES[piece], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE)) # delete this comment later
+                screen.blit(IMAGES[piece], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
-# empty for now
-# ditto
-# another one
-# these are place holders 
+
 
 if __name__ == "__main__":
     main()
