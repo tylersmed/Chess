@@ -77,9 +77,36 @@ class GameState():
                     moves.append(Move((r, c), (r+1, c+1), self.board))
 
     def getRookMoves(self, r, c, moves):
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-        for d in directions:
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)] 
+        for d in directions: # for loop runs the while loop 4 times, in every possible dir the rook can move
             dist = 1
+            while abs(r+dist*d[0]) <= 7 and abs(r+dist*d[0] >= 0 and
+                abs(c+dist*d[1]) <= 7 and abs(c+dist*d[1]) >= 0): # keep the movement within the board dimensions
+
+                # handle move up and down the board
+                if d[0] != 0:
+                    sq = self.board[r+(d[0]*dist)][c] # saves the proposed square for eaiser indexing
+                    if sq[0] == '-':
+                        moves.append(Move((r, c), (r+d[0]*dist, c), self.board)) # add moving to blank square
+                    elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
+                        moves.append(Move((r, c), (r+d[0]*dist, c), self.board)) # add capturing enemy piece, then stop moving in current dir
+                        break
+                    else:
+                        break # stop moving in current dir if you run into your own piece
+                
+                # handle moves across the board
+                if d[1] != 0:
+                    sq = self.board[r][c+(d[1]*dist)]
+                    if sq[1] == '-':
+                        moves.append(Move((r, c), (r+d[1]*dist, c), self.board)) # moving to a blank square
+                    elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
+                        moves.append(Move((r, c), (r+d[1]*dist, c), self.board)) # capture enemy peice, stop moving in current dir
+                        break
+                    else:
+                        break # stop moving in current dir if you run into your own piece
+                
+                dist += 1
+
 
     def getKnightMoves(self, r, c, moves):
         pass
