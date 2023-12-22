@@ -77,7 +77,9 @@ class GameState():
                     moves.append(Move((r, c), (r+1, c+1), self.board))
 
     def getRookMoves(self, r, c, moves):
-        pass
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        for d in directions:
+            dist = 1
 
     def getKnightMoves(self, r, c, moves):
         pass
