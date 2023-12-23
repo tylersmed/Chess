@@ -52,6 +52,10 @@ def main():
                         gs.makeMove(move)
                         moveMade = True 
                     sqSelected = (); playerClicks = [] #reset selected move/square
+                elif len(playerClicks) == 1:
+                    validMoves = gs.getValidMoves(playerClicks[0].startRow, playerClicks[0].startCol)
+                    for m in validMoves:
+                        p.draw.rect(screen, p.Color("blue"), p.Rect(SQ_SIZE*m.endRow, SQ_SIZE *m.endCol, SQ_SIZE, SQ_SIZE), 4)
 
             #key handlers
             elif e.type == p.KEYDOWN:
@@ -62,7 +66,8 @@ def main():
         if moveMade:
             validMoves = gs.getValidMoves()
 
-        drawGameState(screen, gs)
+        if len(playerClicks) != 1:
+            drawGameState(screen, gs)
         clock.tick(MAX_FPS)
         p.display.flip()
 

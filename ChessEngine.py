@@ -36,12 +36,17 @@ class GameState():
             self.white_to_move = not self.white_to_move
 
     # Legal moves while considering check
-    def getValidMoves(self):
-        return self.getAllPossibleMoves()
+    def getValidMoves(self, r=-1, c=-1):
+        if r == -1:
+            allMoves = self.getAllPossibleMoves()
+            return allMoves
+        else:
+            # piece = 
+            pass
 
     # Legal moves without considering check
     def getAllPossibleMoves(self):
-        moves = [Move((6,4), (4, 4), self.board)]
+        moves = []
         for r in range(len(self.board)):
             for c in range(len(self.board[r])):
                 turn = self.board[r][c][0]
@@ -109,16 +114,48 @@ class GameState():
 
 
     def getKnightMoves(self, r, c, moves):
-        pass
+        directions = [(2, 1), (2, -1), (-2, 1), (-2, -1), 
+                        (1, 2), (-1, 2), (1, -2), (-1, -2)] # every possible move from current square for a knight in +row, +col
+        for d in directions:
+            if abs(r+d[0]) <= 7 and abs(r+d[0]) >= 0 and abs(c+d[1] <= 7 and abs(c+d[1] >= 0)): # check move is on the board
+                sq = self.board[r+d[0]][c+d[1]]
+                if sq[0] == '-':
+                    moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # move to blank space
+                elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
+                    moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # capture enemy piece
 
     def getBishopMoves(self, r, c, moves):
-        pass
+        directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)] # all the possible directions to move in +row and +col
+        for d in directions:
+            dist = 1
+            while abs(r+dist*d[0]) <= 7 and abs(r+dist*d[0] >= 0 and
+                abs(c+dist*d[1]) <= 7 and abs(c+dist*d[1]) >= 0): # keep the movement within the board dimensions
+                sq = self.board[r+d[0]*dist][c+d[1]*dist]
+                if sq[0] == '-':
+                    moves.append(Move((r, c), (r+d[0]*dist, c+d[1]*dist), self.board))
+                    dist += 1
+                elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
+                    moves.append(Move((r, c), (r+d[0]*dist, c+d[1]*dist), self.board))
+                    break
+                else:
+                    break
+
 
     def getKingMoves(self, r, c, moves):
-        pass
+        directions = [(1,-1), (1, 0), (1, 1), (0, -1), (0, 1),
+                      (-1, -1), (-1, 0), (-1, 1)] # possible directions to move in +row +col
+        for d in directions:
+            if abs(r+d[0]) <= 7 and abs(r+d[0]) >= 0 and abs(c+d[1] <= 7 and abs(c+d[1] >= 0)): # check move is on the board
+                sq = self.board[r+d[0]][c+d[1]]
+                if sq[0] == '-':
+                    moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # move to blank space
+                elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
+                    moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # capture enemy piece
 
     def getQueenMoves(self, r, c, moves):
-        pass
+        # a queen can move in all directions a rook and bishop can move
+        self.getRookMoves(r, c, moves)
+        self.getBishopMoves(r, c, moves)
 
 class Move():
     # map keys to values
