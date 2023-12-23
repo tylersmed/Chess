@@ -37,12 +37,13 @@ class GameState():
 
     # Legal moves while considering check
     def getValidMoves(self, r=-1, c=-1):
+        allMoves = []
         if r == -1:
             allMoves = self.getAllPossibleMoves()
-            return allMoves
         else:
-            # piece = 
-            pass
+            piece = self.board[r][c][1]
+            allMoves = self.moveFunctions[piece](r, c, allMoves)
+            return allMoves
 
     # Legal moves without considering check
     def getAllPossibleMoves(self):
@@ -81,6 +82,8 @@ class GameState():
                 if self.board[r+1][c+1][0] == 'w':
                     moves.append(Move((r, c), (r+1, c+1), self.board))
 
+        return moves
+
     def getRookMoves(self, r, c, moves):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)] 
         for d in directions: # for loop runs the while loop 4 times, in every possible dir the rook can move
@@ -112,6 +115,7 @@ class GameState():
                 
                 dist += 1
 
+        return moves
 
     def getKnightMoves(self, r, c, moves):
         directions = [(2, 1), (2, -1), (-2, 1), (-2, -1), 
@@ -123,6 +127,8 @@ class GameState():
                     moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # move to blank space
                 elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
                     moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # capture enemy piece
+
+        return moves
 
     def getBishopMoves(self, r, c, moves):
         directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)] # all the possible directions to move in +row and +col
@@ -139,6 +145,8 @@ class GameState():
                     break
                 else:
                     break
+        
+        return moves
 
 
     def getKingMoves(self, r, c, moves):
@@ -152,10 +160,13 @@ class GameState():
                 elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
                     moves.append(Move((r, c), (r+d[0], c+d[1]), self.board)) # capture enemy piece
 
+        return moves
+
     def getQueenMoves(self, r, c, moves):
         # a queen can move in all directions a rook and bishop can move
         self.getRookMoves(r, c, moves)
         self.getBishopMoves(r, c, moves)
+        return moves
 
 class Move():
     # map keys to values

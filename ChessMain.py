@@ -53,9 +53,9 @@ def main():
                         moveMade = True 
                     sqSelected = (); playerClicks = [] #reset selected move/square
                 elif len(playerClicks) == 1:
-                    validMoves = gs.getValidMoves(playerClicks[0].startRow, playerClicks[0].startCol)
+                    validMoves = gs.getValidMoves(playerClicks[0][0], playerClicks[0][1])
                     for m in validMoves:
-                        p.draw.rect(screen, p.Color("blue"), p.Rect(SQ_SIZE*m.endRow, SQ_SIZE *m.endCol, SQ_SIZE, SQ_SIZE), 4)
+                        p.draw.rect(screen, p.Color("blue"), p.Rect(SQ_SIZE*m.endCol, SQ_SIZE *m.endRow, SQ_SIZE, SQ_SIZE), 4)
 
             #key handlers
             elif e.type == p.KEYDOWN:
