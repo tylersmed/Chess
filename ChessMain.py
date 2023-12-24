@@ -24,6 +24,7 @@ def main():
     screen.fill(p.Color("white"))
     gs = ChessEngine.GameState()
     validMoves = gs.getValidMoves()
+    # showMoves = True
     moveMade = False
     loadImages()
 
@@ -39,12 +40,20 @@ def main():
             elif e.type == p.MOUSEBUTTONDOWN:
                 location = p.mouse.get_pos() # (x, y) location of mouse
                 col = location[0]//SQ_SIZE; row = location[1]//SQ_SIZE
-                if sqSelected == (row, col): #the user clicked the same square twice
+                sqSelected = (row, col)
+                piece = gs.board[row][col]
+                print(piece)
+                print(gs.white_to_move, piece[0]=='w')
+                if len(playerClicks)!=0 and playerClicks[0] == (row, col): #the user clicked the same square twice
                     sqSelected = () #deselect
                     playerClicks = []
-                else:
-                    sqSelected = (row, col)
+                elif len(playerClicks) == 1:
+                    if (not gs.white_to_move and piece[0] != 'b') or (gs.white_to_move and piece[0] != 'w'):
+                        playerClicks.append(sqSelected)
+                elif (gs.white_to_move and piece[0] == 'w') or (not gs.white_to_move and piece[0] == 'b'):
+                    print('x')
                     playerClicks.append(sqSelected)
+
                 if len(playerClicks) == 2:
                     move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
@@ -52,7 +61,7 @@ def main():
                         gs.makeMove(move)
                         moveMade = True 
                     sqSelected = (); playerClicks = [] #reset selected move/square
-                elif len(playerClicks) == 1:
+                elif len(playerClicks) == 1: #and showMoves:
                     validMoves = gs.getValidMoves(playerClicks[0][0], playerClicks[0][1])
                     for m in validMoves:
                         p.draw.rect(screen, p.Color("blue"), p.Rect(SQ_SIZE*m.endCol, SQ_SIZE *m.endRow, SQ_SIZE, SQ_SIZE), 4)
@@ -62,8 +71,10 @@ def main():
                 if e.key == p.K_z:
                     gs.undoMove() # undo move when 'z' is pressed
                     moveMade = True
+                if e.key == p.K_m:
+                    showMoves = not showMoves
 
-        if moveMade:
+        if len(playerClicks) != 1:
             validMoves = gs.getValidMoves()
 
         if len(playerClicks) != 1:
