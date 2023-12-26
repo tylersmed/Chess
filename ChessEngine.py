@@ -25,6 +25,9 @@ class GameState():
     def makeMove(self, move):
         self.board[move.startRow][move.startCol] = '--'
         self.board[move.endRow][move.endCol] = move.pieceMoved
+        if (move.endRow == 0 or move.endRow == 7) and self.board[move.endRow][move.endCol][1] == 'P':
+            self.board[move.endRow][move.endCol] = move.pieceMoved[0] + 'Q'
+            # handles pawn promotion
         self.move_log.append(move) #log moves to undo later/ display history
         self.white_to_move = not self.white_to_move # swap players
 
@@ -73,7 +76,7 @@ class GameState():
         if not self.white_to_move:
             if self.board[r+1][c] == '--':
                 moves.append(Move((r, c), (r+1, c), self.board))
-                if self.board[r+2][c] == '--':
+                if r == 1 and self.board[r+2][c] == '--':
                     moves.append(Move((r, c), (r+2, c), self.board))
             if c-1 >= 0:
                 if self.board[r+1][c-1][0] == 'w': # there's and enemy piece to capture
@@ -90,30 +93,15 @@ class GameState():
             dist = 1
             while abs(r+dist*d[0]) <= 7 and abs(r+dist*d[0] >= 0 and
                 abs(c+dist*d[1]) <= 7 and abs(c+dist*d[1]) >= 0): # keep the movement within the board dimensions
-
-                # handle move up and down the board
-                if d[0] != 0:
-                    sq = self.board[r+(d[0]*dist)][c] # saves the proposed square for eaiser indexing
-                    if sq[0] == '-':
-                        moves.append(Move((r, c), (r+d[0]*dist, c), self.board)) # add moving to blank square
-                    elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
-                        moves.append(Move((r, c), (r+d[0]*dist, c), self.board)) # add capturing enemy piece, then stop moving in current dir
-                        break
-                    else:
-                        break # stop moving in current dir if you run into your own piece
-                
-                # handle moves across the board
-                if d[1] != 0:
-                    sq = self.board[r][c+(d[1]*dist)]
-                    if sq[1] == '-':
-                        moves.append(Move((r, c), (r+d[1]*dist, c), self.board)) # moving to a blank square
-                    elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
-                        moves.append(Move((r, c), (r+d[1]*dist, c), self.board)) # capture enemy peice, stop moving in current dir
-                        break
-                    else:
-                        break # stop moving in current dir if you run into your own piece
-                
-                dist += 1
+                sq = self.board[r+d[0]*dist][c+d[1]*dist]
+                if sq[0] == '-':
+                    moves.append(Move((r, c), (r+d[0]*dist, c+d[1]*dist), self.board))
+                    dist += 1
+                elif (sq[0] == 'b' and self.white_to_move) or (sq[0] == 'w' and not self.white_to_move):
+                    moves.append(Move((r, c), (r+d[0]*dist, c+d[1]*dist), self.board))
+                    break
+                else:
+                    break
 
         return moves
 
@@ -147,7 +135,6 @@ class GameState():
                     break
         
         return moves
-
 
     def getKingMoves(self, r, c, moves):
         directions = [(1,-1), (1, 0), (1, 1), (0, -1), (0, 1),

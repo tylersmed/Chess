@@ -42,8 +42,6 @@ def main():
                 col = location[0]//SQ_SIZE; row = location[1]//SQ_SIZE
                 sqSelected = (row, col)
                 piece = gs.board[row][col]
-                print(piece)
-                print(gs.white_to_move, piece[0]=='w')
                 if len(playerClicks)!=0 and playerClicks[0] == (row, col): #the user clicked the same square twice
                     sqSelected = () #deselect
                     playerClicks = []
@@ -51,7 +49,6 @@ def main():
                     if (not gs.white_to_move and piece[0] != 'b') or (gs.white_to_move and piece[0] != 'w'):
                         playerClicks.append(sqSelected)
                 elif (gs.white_to_move and piece[0] == 'w') or (not gs.white_to_move and piece[0] == 'b'):
-                    print('x')
                     playerClicks.append(sqSelected)
 
                 if len(playerClicks) == 2:
