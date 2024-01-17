@@ -7,3 +7,6 @@ Commands:
   - Select piece: Left click
   - Deselect piece: Left click on selected piece
   - Undo move: z
+
+Dependicies:
+  - Pygame
